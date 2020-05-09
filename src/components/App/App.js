@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { createUseStyles } from "react-jss";
 
 const useStyles = createUseStyles({
@@ -119,25 +119,49 @@ const useStyles = createUseStyles({
   },
   choice: {
     color: "white",
+    zIndex: "100",
   },
 });
 
 function App() {
   const classes = useStyles();
+
+  const [timeSelected, setTimeSelected] = useState(1);
+  const [started, setStarted] = useState(false);
+
+  const initialStyle = !started
+    ? { animation: "none", transform: "scale(0.2)" }
+    : { animationIterationCount: timeSelected * 7, transform: "scale(0.2)" };
+
   return (
     <div className={classes.app}>
       <div className={classes.flower}>
-        <div className={classes.circle}></div>
-        <div className={classes.circle}></div>
-        <div className={classes.circle}></div>
-        <div className={classes.circle}></div>
-        <div className={classes.circle}></div>
-        <div className={classes.circle}></div>
+        <div className={classes.circle} style={initialStyle}></div>
+        <div className={classes.circle} style={initialStyle}></div>
+        <div className={classes.circle} style={initialStyle}></div>
+        <div className={classes.circle} style={initialStyle}></div>
+        <div className={classes.circle} style={initialStyle}></div>
+        <div className={classes.circle} style={initialStyle}></div>
       </div>
       <div className={classes.choice}>
-        <p>7 breath</p>
-        <input value="1 min" />
-        <button onClick={() => console.log("salut")}>Start</button>
+        <p>{timeSelected * 7} breath</p>
+        <select
+          value={timeSelected}
+          id="time-select"
+          onChange={(time) => {
+            setTimeSelected(parseInt(time.target.value, 10));
+            setStarted(false);
+          }}
+        >
+          <option value={1}>1 min</option>
+          <option value={2}>2 min</option>
+          <option value={3}>3 min</option>
+          <option value={4}>4 min</option>
+          <option value={5}>5 min</option>
+        </select>
+        <button onClick={() => setStarted((oldValue) => !oldValue)}>
+          {started ? 'Stop' : 'Start'}
+        </button>
       </div>
     </div>
   );
